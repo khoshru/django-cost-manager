@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from costs.models import Expense
 from django.db.models import Sum
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from costs.serializers import ExpenseSerializer
 
 def hello(request):
     expenses = Expense.objects.all()
@@ -14,3 +17,13 @@ def total(request):
     result = Expense.objects.aggregate(Sum("amount"))
     return HttpResponse(result["amount__sum"])
 
+@api_view(["GET"])
+def expense_list(request):
+    expenses = Expense.objects.all()
+    serializer = ExpenseSerializer(expenses, many=True)
+    return Response(serializer.data)
+
+@api_view(["GET"])
+def total_api(request):
+    result = Expense.objects.aggregate(Sum("amount"))
+    return Response(result)

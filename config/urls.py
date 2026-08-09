@@ -17,9 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from costs.views import hello, total
+from costs.views import hello, total, expense_list, total_api
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("hello/", hello),
     path("total/", total ),
+    path("api/expenses/", expense_list),
+    path("api/total/",total_api ),
+
 ]
