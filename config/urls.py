@@ -21,14 +21,13 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 router = DefaultRouter()
-router.register("expenses", ExpenseViewSet)
+router.register("expenses", ExpenseViewSet, basename="expense")
 router.register("categories", CategoryViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("hello/", hello),
     path("total/", total ),
-    path("api/expenses/", expense_list),
     path("api/total/",total_api ),
     path("api/", include(router.urls)),
     path("api/token/", TokenObtainPairView.as_view()),

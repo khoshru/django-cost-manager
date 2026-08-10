@@ -9,8 +9,10 @@ from rest_framework import viewsets
 
 
 class ExpenseViewSet(viewsets.ModelViewSet):
-    queryset = Expense.objects.all()
     serializer_class = ExpenseSerializer
+    def get_queryset(self):
+            print("USER:", self.request.user)
+            return Expense.objects.filter(user=self.request.user)
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
