@@ -14,10 +14,15 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.urls import path, include
 from django.contrib import admin
-from django.urls import path
-from costs.views import hello, total
-from costs.views import hello, total, expense_list, total_api
+from costs.views import hello, total, expense_list, total_api, ExpenseViewSet, CategoryViewSet
+from rest_framework.routers import DefaultRouter
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
+router = DefaultRouter()
+router.register("expenses", ExpenseViewSet)
+router.register("categories", CategoryViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -25,5 +30,8 @@ urlpatterns = [
     path("total/", total ),
     path("api/expenses/", expense_list),
     path("api/total/",total_api ),
+    path("api/", include(router.urls)),
+    path("api/token/", TokenObtainPairView.as_view()),
+    path("api/token/refresh/", TokenRefreshView.as_view()),
 
 ]
