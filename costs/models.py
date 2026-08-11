@@ -17,5 +17,8 @@ class Expense(models.Model):
         return f"{self.amount} - {self.note} - {self.date}"
 
 class Wallet(models.Model):
+    user = models.ForeignKey(User, on_delete= models.CASCADE)
     wallet = models.CharField(max_length=200)
     inventory = models.IntegerField()
+    def __str__(self):
+        return f"{self.user} - {self.inventory}"

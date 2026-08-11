@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from costs.models import Expense, Category
+from costs.models import Expense, Category, Wallet
 from django.db.models import Sum
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from costs.serializers import ExpenseSerializer, CategorySerializer
+from costs.serializers import ExpenseSerializer, CategorySerializer, WalletSerializer
 from rest_framework import viewsets
 
 
@@ -13,10 +13,20 @@ class ExpenseViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
             print("USER:", self.request.user)
             return Expense.objects.filter(user=self.request.user)
+    def perform_create(self, serializer):
+        serializer.save(user= self.request.user)
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+class WalletViewSet(viewsets.ModelViewSet):
+    serializer_class = WalletSerializer
+    def get_queryset(self):
+        print("user:", self.request.user)
+        return Wallet.objects.filter(user= self.request.user)
+    def perform_create(self, serializer):
+        serializer.save(user= self.request.user)
 
 def hello(request):
     expenses = Expense.objects.all()
