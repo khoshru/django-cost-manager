@@ -3,10 +3,10 @@ from django.http import HttpResponse
 from costs.models import Expense, Category, Wallet
 from django.db.models import Sum
 from rest_framework.response import Response
-from costs.serializers import ExpenseSerializer, CategorySerializer, WalletSerializer
+from costs.serializers import RegisterSerializer ,ExpenseSerializer, CategorySerializer, WalletSerializer
 from rest_framework import viewsets
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 
 class ExpenseViewSet(viewsets.ModelViewSet):
@@ -29,6 +29,7 @@ class WalletViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user= self.request.user)
 
+
 @api_view(["GET"])
 def expense_list(request):
     expenses = Expense.objects.all()
@@ -40,3 +41,12 @@ def expense_list(request):
 def total_api(request):
     result = Expense.objects.filter(user= request.user).aggregate(Sum("amount"))
     return Response(result)
+
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def register(request):
+    serializer = RegisterSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
