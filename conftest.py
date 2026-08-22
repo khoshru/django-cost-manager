@@ -2,7 +2,7 @@ import pytest
 from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from costs.models import Category
 
 @pytest.fixture
 def api_client():
@@ -23,7 +23,5 @@ def auth_client(api_client, user):
     return api_client
 
 @pytest.fixture
-def other_user(db):
-    return get_user_model().objects.create_user(
-        username = "sina", password= "2323"
-    )
+def category(db):
+    return Category.objects.create(name="Food")
