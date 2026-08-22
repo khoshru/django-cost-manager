@@ -21,3 +21,9 @@ def auth_client(api_client, user):
     refresh = RefreshToken.for_user(user)
     api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {refresh.access_token}")
     return api_client
+
+@pytest.fixture
+def other_user(db):
+    return get_user_model().objects.create_user(
+        username = "sina", password= "2323"
+    )
