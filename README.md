@@ -82,6 +82,8 @@ python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
 ```
+
+
 ## Running with Docker
 
 The only prerequisite is Docker. Python and PostgreSQL do not need to be installed locally.
