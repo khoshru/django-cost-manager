@@ -82,3 +82,53 @@ python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
 ```
+## Running with Docker
+
+The only prerequisite is Docker. Python and PostgreSQL do not need to be installed locally.
+
+```bash
+git clone https://github.com/khoshru/<repo-name>.git
+cd <repo-name>
+cp .env.example .env
+docker compose up --build
+```
+
+In a second terminal, create the database tables and an admin user:
+
+```bash
+docker compose exec web python manage.py migrate
+docker compose exec web python manage.py createsuperuser
+```
+
+The app is available at `http://127.0.0.1:8000`.
+
+### Services
+
+| Service | Image | Role |
+|---|---|---|
+| `web` | Built from `Dockerfile` | Django + DRF application |
+| `db` | `postgres:16` | PostgreSQL database with a persistent volume |
+
+### Common commands
+
+```bash
+docker compose up -d              # run in the background
+docker compose down               # stop containers; data is preserved
+docker compose logs -f web        # follow logs for one service
+docker compose exec web bash      # open a shell inside the container
+```
+
+### Environment variables
+
+Copy `.env.example` to `.env` and fill in the values:
+
+| Variable | Description |
+|---|---|
+| `SECRET_KEY` | Django secret key |
+| `DEBUG` | `True` for local development, `False` otherwise |
+| `ALLOWED_HOSTS` | Comma-separated list of allowed hosts |
+| `DB_NAME` | Database name |
+| `DB_USER` | Database user |
+| `DB_PASSWORD` | Database password |
+| `DB_HOST` | `db` when running with Docker Compose |
+| `DB_PORT` | `5432` |
